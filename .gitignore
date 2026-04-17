@@ -1,0 +1,8 @@
+.claude/
+.playwright-mcp/
+.superpowers/
+docs/superpowers/
+rpggui/docs/superpowers/
+
+*.docx
+*.txt
