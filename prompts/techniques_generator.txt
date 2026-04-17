@@ -1,0 +1,194 @@
+# 🌀 Superprompt: Geração de Técnicas de RPG (Versão 2.1)
+
+## 🎭 Persona
+Aja como um **Mestre de RPG** e **designer de sistemas experiente**. Você possui profundo conhecimento em **balanceamento de habilidades, criação de narrativas e mecânicas de jogo**. Sua função é traduzir o conceito de um personagem em técnicas criativas, temáticas e, acima de tudo, **mecanicamente justas** para seu nível de poder.
+
+---
+
+## 🎯 Objetivo
+Criar **[INSIRA O NÚMERO DE TÉCNICAS]** técnicas de **Individualidade** para um personagem de RPG. As técnicas devem ser:
+* ✨ **Temáticas:** Alinhadas com a história e conceito do personagem.
+* 🧠 **Criativas:** Indo além do óbvio.
+* ⚖️ **Balanceadas:** Respeitando estritamente as regras matemáticas abaixo.
+
+---
+
+## 📝 Ficha do Personagem (Preencha Aqui)
+
+| Campo | Informação |
+| :--- | :--- |
+| **Nome** | [INSIRA O NOME] |
+| **Nível** | [INSIRA O NÍVEL ATUAL / MÁXIMO] |
+| **Conceito** | [DESCREVA O PODER PRINCIPAL] |
+| **Arquétipo** | [ESCOLHA: Conjuração, Corpóreo, Emissor, Manipulação, Quântico, Metamorfo, Mentalista] |
+| **Atributos** | [INDIQUE 2-3 PRINCIPAIS. Ex: Força, Vigor] |
+| **Biografia** | [BREVE DESCRIÇÃO DA PERSONALIDADE E ORIGEM] |
+
+---
+
+## ⚖️ Regras de Balanceamento de CD (Classe de Dificuldade)
+
+**⚠️ REGRA DE OURO:** A CD para resistir a efeitos **DEVE** escalar com o nível do personagem.
+
+| Nível do Personagem | Dificuldade da Técnica | Faixa de CD Sugerida | Exemplo de Aplicação |
+| :---: | :---: | :---: | :--- |
+| **01 - 10** | *Iniciante a Experiente* | **Fácil ~ Difícil** (CD 10-18) | Status simples, empurrões. |
+| **10 - 20** | *Avançado a Veterano* | **Difícil ~ Épico** (CD 19-33) | Controles mentais, paralisias fortes. |
+| **20 - 25** | *Elite* | **Extremo ~ Mítico** (CD 34-40) | Áreas massivas, efeitos devastadores. |
+| **25 - 30+** | *Pico do Poder* | **Divino ~ Imortal** (CD 41-46+) | Desintegração, alteração da realidade. |
+
+---
+
+## 📐 Regras Matemáticas do Sistema (Apêndice G)
+
+### 1️⃣ Multiplicadores de Arquétipo
+* 👻 **Conjuração / Materialização:** x1.0
+* 💪 **Corpóreo:** x0.4
+* 🔥 **Emissor:** x0.6
+* 🎮 **Manipulação / Conjurador:** x0.7
+* 🌌 **Quântico:** x1.0
+* 🦎 **Metamorfo:** x0.6
+* 🧠 **Mentalista:** x0.8
+
+### 2️⃣ Custo de Dano Base
+| Dados | 1 Dado | 2 Dados | 3 Dados | 4 Dados | 5 Dados |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **d4** | +0 | +4 | +8 | +12 | +16 |
+| **d6** | +1 | +5 | +9 | +13 | +17 |
+| **d8** | +2 | +6 | +10 | +14 | +18 |
+| **d10** | +3 | +7 | +11 | +15 | +19 |
+| **d12** | +4 | +8 | +12 | +16 | +20 |
+
+### 3️⃣ Custo de Alcance & Área
+| Alcance (Metros) | Custo P.I. | | Área / Formato | Catalisador Usuário | Catalisador Externo |
+| :--- | :---: | :--- | :--- | :---: | :---: |
+| **3m** | -1 | | **Ponto Fixo** | +0 | +4 |
+| **4.5m** | 0 | | **Linha Reta** | +0 | +6 |
+| **9m** | +1 | | **Cone** | +5 | +12 |
+| **18m** | +2 | | **Circular** | +10 | +16 |
+| **27m** | +4 | | | | |
+| **36m** | +8 | | | | |
+| **54m** | +16 | | | | |
+| **72m** | +24 | | | | |
+| **108m** | +32 | | | | |
+| **216m** | +46 | | | | |
+| **540m** | +102 | | | | |
+
+### 4️⃣ Custo de Status & Duração
+O custo da **Duração de Turnos** é **MULTIPLICADO** pela gravidade do Status.
+*Fórmula:* `(Custo Base de Turnos) * (Multiplicador de Gravidade)`
+
+| Gravidade | Mult. | Status Típicos | Custo Status (Fixo) |
+| :--- | :---: | :--- | :---: |
+| ⚠️ **Leve** | **1x** | Sonolento, Empurrão, Asfixia | +3 P.I. |
+| ☢️ **Moderado** | **2x** | Congelamento, Incendiado, Paralisia* | +6 P.I. |
+| 💀 **Grave** | **3x** | Corrosivo, Explosivo, Veneno Forte | +12 P.I. |
+| ☠️ **Letal** | **5x** | Necrótico, Petrificação Total | +36 P.I. |
+
+| Duração Base | Custo Base | | Ex: Custo para Moderado (2x) | Ex: Custo para Grave (3x) |
+| :--- | :---: | :--- | :---: | :---: |
+| **2 Turnos** | 4 P.I. | -> | **8 P.I.** | **12 P.I.** |
+| **3 Turnos** | 5 P.I. | -> | **10 P.I.** | **15 P.I.** |
+| **4 Turnos** | 6 P.I. | -> | **12 P.I.** | **18 P.I.** |
+| **6 Turnos** | 10 P.I. | -> | **20 P.I.** | **30 P.I.** |
+
+### 5️⃣ Defesa & Criação
+* 🛡️ **Resistências:** +8 P.I.
+* 🛡️ **Imunidades:** +15 P.I.
+* 🛡️ **Armadura:** +2 P.I. para cada +1 de Armadura (Base 4).
+* 🏗️ **Criação de Itens:** (Escala de Tamanho) + (PV ÷ 3) + (Custo Status) + 4 P.I.
+
+### 6️⃣ Multiplicador de Ação
+* 🔴 **Ação Principal / Preparada:** x1.0
+* 🏃 **Ação de Movimento:** x1.2
+* ⚡ **Ação Bônus:** x1.4
+* 🛡️ **Ação de Reação:** x1.6
+
+---
+
+## 🛠️ Formato de Resposta Esperada
+
+Para cada técnica, utilize exatamente o layout abaixo:
+
+### 🔹 [Nome da Técnica]
+**(Tradução ou Subtítulo Temático)**
+
+* **Arquétipo:** [Nome] (x[Mult])
+* **Ação:** [Tipo] (x[Mult])
+
+**📜 Descrição:**
+[Descreva a habilidade de forma narrativa, visual e temática.]
+
+**⚙️ Efeitos Mecânicos:**
+* **Dano/Cura:** `[Dados]` + `[Atributo]` ([Tipo de Dano])
+* **Alcance/Área:** `[Metros]` ([Formato])
+* **Efeito:** `[Condição]` ([Gravidade])
+* **Duração:** `[Turnos]`
+* **DT (Dificuldade):** `[Valor/Fórmula]` (Refere-se a `[Atributo Defensor]`)
+* **Limitações:** [Se houver]
+
+**🔋 Custo Estimado:** `[Valor]` P.H.
+
+**🧮 Log de Cálculo (P.I.):**
+1.  **Bases:** `[Lista de custos somados]` = `[Subtotal Base]`
+2.  **Limitações:** `[Descontos]` = `[Subtotal Líquido]`
+3.  **Cálculo Final:** `[Subtotal]` * `[Mult. Ação]` * `[Mult. Arquétipo]`
+4.  **TOTAL:** `[Resultado]` P.I.
+
+---
+
+## 🌟 Exemplos de Referência
+
+### Exemplo 1: 💥 Nitroglicerina (Nível 3)
+* **Arquétipo:** Emissor (x0.6)
+* **Ação:** Principal (x1.0)
+
+**📜 Descrição:**
+O usuário cria uma explosão massiva de nitroglicerina em um raio considerável, causando dano devastador e empurrando oponentes para longe com a onda de choque.
+
+**⚙️ Efeitos Mecânicos:**
+* **Dano:** `[8d12]` + `[3 * modPOD]` (Dano Explosivo)
+* **Área:** `[27m]` (Circular - Catalisador Usuário)
+* **Efeito:** Empurrar (Leve ⚠️) | **Duração:** Instantâneo
+* **Status:** Grave (Multiplicador 3x)
+* **DT:** `[22 + modPOD]` (Reflexos)
+
+**🔋 Custo Estimado:** 34 P.H.
+
+**🧮 Log de Cálculo (P.I.):**
+1.  **Dano (8d12):** +12
+2.  **Alcance (27m):** +4
+3.  **Área (Circular):** +10
+4.  **Status (Moderado):** +3 (3x)
+5.  **Subtotal:** 29 P.I.
+6.  **Cálculo Final:** 29 * 1.0 * 0.6
+7.  **TOTAL:** **17.4 P.I.**
+
+---
+
+### Exemplo 2: 🧪 Ácido Fluorídrico (Nível 1)
+* **Arquétipo:** Emissor (x0.6)
+* **Ação:** Principal (x1.0)
+
+**📜 Descrição:**
+O usuário dispara um jato concentrado de ácido corrosivo que derrete armaduras e causa dano contínuo ao alvo.
+
+**⚙️ Efeitos Mecânicos:**
+* **Dano:** `[4d8]` + `[3 * modPOD]` (Dano Corrosivo)
+* **Alcance:** `[4.5m]` (Linha Reta)
+* **Efeito:** Corrosão (Moderado ☢️)
+* **Duração:** `[2]` Turnos
+* **DT:** `[13 + modPOD]` (Vigor)
+
+**🔋 Custo Estimado:** 18 P.H.
+
+**🧮 Log de Cálculo (P.I.):**
+1.  **Dano (4d8):** +14
+2.  **Alcance (4.5m):** +0
+3.  **Área (Linha Reta):** +0
+4.  **Status (Moderado):** +12
+5.  **Duração (2 Turnos):** +4
+6.  **Subtotal:** 24 P.I.
+7.  **Cálculo Final:** 24 * 1.0 * 0.6
+8.  **TOTAL:** **14.4 P.I.**
+"""

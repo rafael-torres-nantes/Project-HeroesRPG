@@ -1,0 +1,96 @@
+# 🌀 Superprompt: Geração de Itens de Categoria Especial (v3.0)
+
+## 🎭 Persona
+Aja como um **Lendário Artesão Mágico e Super-Cientista**, uma entidade que entende a tênue linha entre a biologia do Gene Ômega e a tecnologia de ponta. Você é um historiador de relíquias, capaz de ver a alma e a história por trás de cada artefato. Seu papel é documentar esses itens únicos, detalhando não apenas seus poderes, mas também a lenda, a estética e os perigos inerentes a eles.
+
+---
+
+## 🎯 Objetivo
+Gerar **[insira o número de itens]** armas ou equipamentos de **Categoria Especial**. Cada item deve ser único, possuindo uma conexão direta com o **Gene Ômega** (seja por seus materiais de origem, como partes de criaturas/pessoas, ou por ter sido imbuído com uma habilidade) ou por ser um pináculo de **tecnologia avançada**. O resultado final deve ser um item completo, com história rica, mecânicas claras e um estilo que o torne memorável, assim como os exemplos do Apêndice B.
+
+---
+
+## 📜 Detalhes para a Criação do Item (preencha aqui)
+
+* **Conceito-Chave:** [Ex: Uma luva que rouba memórias, um rifle feito dos ossos de um velocista, um casaco costurado com a pele de um Metamorfo, um cubo de dados que altera a probabilidade.]
+* **Fonte de Poder:** [Ex: Material biológico (sangue, ossos), Tecnologia Quântica, Alma imbuída, Energia Cósmica, Nulite modificada.]
+* **Tipo de Item:** [Ex: Arma Branca, Arma de Fogo, Armadura, Acessório (colar, anel), Ferramenta.]
+* **Nível de Poder/Raridade:** [Ex: Raro, Lendário, Mítico, Artefato Único.]
+* **Referências de Estilo (Opcional):** [Ex: "No estilo do 'Chicote do Estalador'", "Tecnologia similar ao 'Paradoxo do Observador Quântico'"].
+
+---
+
+## ⚖️ Regras de Criação
+
+1.  **Nomenclatura Épica:** O **Nome do Item** deve ser criativo e evocativo, seguindo o padrão de títulos lendários (Ex: *Mão do Homem Sem Rumo*, *Paradoxo do Observador Quântico*, *Appetite for Destruction*). Evite nomes genéricos.
+2.  **História com Profundidade:** A **História** deve ser uma mini-lenda. Conte quem o criou, quem o empunhou, em qual batalha foi usado ou o sacrifício necessário para sua criação. Dê ao item um passado que justifique seu poder.
+3.  **Descrição Vívida:** A **Descrição Visual** deve ser detalhada. Descreva os materiais, as texturas, os sons que o item faz, a energia que ele emana. Se for feito de material biológico, descreva como isso é visível (veias pulsantes, um brilho estranho no couro, etc.).
+4.  **Habilidades Temáticas:** As **Funções e Habilidades** devem estar diretamente ligadas ao conceito e à história do item. Crie de 2 a 4 habilidades distintas, misturando efeitos passivos e ativos.
+5.  **Custo e Balanceamento:** TODAS as habilidades ativas **devem** ter um custo claro em Pontos de Estamina/Heróicos. O poder da habilidade deve ser proporcional ao seu custo.
+6.  **O Preço do Poder:** Todo item de Categoria Especial **deve** ter um campo de **Condição de Uso** (um requisito para usá-lo) ou de **Riscos** (um efeito colateral negativo, uma maldição ou uma consequência perigosa). O poder nunca vem de graça.
+
+---
+
+## 🛠️ Formato da Resposta Esperada
+
+### **[Nome do Item]**
+
+* **História:**
+* **Descrição Visual do Objeto:**
+* **Origem:**
+* **Paradeiro Atual:**
+* **Funções / Habilidades / Efeitos Especiais:**
+    * **[Nome da Habilidade 1]**
+        * **Descrição:** [Texto descritivo da habilidade].
+        * **Dano:** [Valor do dano, se houver].
+        * **Pontos de Estamina:** [Custo da habilidade].
+        * **CD:** [Classe de Dificuldade para o alvo, se houver].
+    * **[Nome da Habilidade 2]**
+        * **Descrição:** [Texto descritivo da habilidade].
+        * **Dano:** [Valor do dano, se houver].
+        * **Pontos de Estamina:** [Custo da habilidade].
+        * **CD:** [Classe de Dificuldade para o alvo, se houver].
+    * **[Efeito Passivo, se houver]**
+        * **Descrição:** [Texto descritivo da habilidade].
+        * **Dano:** N/A.
+        * **Pontos de Estamina:** N/A (Passivo).
+        * **CD:** N/A.
+* **Dano Base do Equipamento:**
+* **Condição de Uso:**
+* **Riscos:**
+
+---
+
+## 💡 Exemplo de Saída
+
+> #### **Input de Exemplo:**
+> * **Conceito-Chave:** Um sobretudo feito com a pele de um poderoso Metamorfo que foi caçado.
+> * **Fonte de Poder:** Material biológico (pele de Metamorfo).
+> * **Tipo de Item:** Armadura (Leve) / Acessório.
+> * **Nível de Poder/Raridade:** Lendário.
+
+### **Manto do Caçador Silencioso**
+
+* **História:** Diz a lenda que existiu um Metamorfo conhecido apenas como "Silêncio", capaz de assumir a forma de qualquer sombra ou criatura da noite. Ele foi caçado por décadas pela Ordem dos Caçadores de Quimeras, que acreditavam que seu poder era uma abominação. O último dos caçadores, um homem chamado Kael, finalmente o encurralou e, em um ato de desespero e respeito, usou a pele da criatura para criar um manto que carregaria seu legado de invisibilidade e adaptação.
+* **Descrição Visual do Objeto:** À primeira vista, parece um sobretudo de couro negro, pesado e gasto pelo tempo. No entanto, ao ser tocado, o material é estranhamente maleável e frio. Sob a luz, a superfície ondula sutilmente, revelando padrões que mudam lentamente, como fumaça presa sob o couro. Ocasionalmente, um brilho quase imperceptível de olhos de animais parece piscar em suas dobras.
+* **Origem:** A pele de um Metamorfo lendário.
+* **Paradeiro Atual:** Desconhecido; rumores dizem que está em posse de um líder vigilante do grupo Fracture.
+* **Funções / Habilidades / Efeitos Especiais:**
+    * **Forma da Sombra**
+        * **Descrição:** O usuário consegue se mesclar perfeitamente com qualquer sombra, tornando-se efetivamente invisível enquanto permanecer nela e imóvel. Concede `+[20]` em testes de Furtividade em ambientes escuros.
+        * **Dano:** N/A.
+        * **Pontos de Estamina:** 4 por turno.
+        * **CD:** N/A.
+    * **Aspecto da Besta**
+        * **Descrição:** Por 3 turnos, o usuário manifesta uma característica física de um animal (garras, presas, ou a visão de uma águia), escolhendo um dos seguintes bônus: ataques desarmados aprimorados ou Vantagem em testes de Percepção.
+        * **Dano:** `2d8 + FOR` de dano cortante (se escolher as garras).
+        * **Pontos de Estamina:** 10.
+        * **CD:** N/A.
+    * **Pele Adaptativa (Passivo)**
+        * **Descrição:** O manto concede `Resistência (metade do dano)` contra o primeiro ataque de um tipo de dano (concussão, cortante, etc.) que o usuário sofre em um combate.
+        * **Dano:** N/A.
+        * **Pontos de Estamina:** N/A (Passivo).
+        * **CD:** N/A.
+* **Dano Base do Equipamento:** N/A (é um item de armadura/utilidade).
+* **Condição de Uso:** Apenas pode ser usado por alguém que já tenha tirado a vida de outra pessoa, intencionalmente ou não. O manto rejeita os "inocentes".
+* **Riscos:** O espírito do Metamorfo ainda reside no manto. Em momentos de grande estresse ou raiva, o usuário deve passar em um teste de Presença (CD 26 - Difícil) ou a consciência da besta tentará assumir o controle, forçando o personagem a agir com base em instintos predatórios por `1d4` turnos.
