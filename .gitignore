@@ -2,7 +2,8 @@
 .playwright-mcp/
 .superpowers/
 docs/superpowers/
-rpggui/docs/superpowers/
+rpgui/docs/superpowers/
 
+CLAUDE.md
 *.docx
 *.txt
