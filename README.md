@@ -126,3 +126,11 @@ A interface GUI roda puramente no cliente. Siga os passos abaixo:
 - [ ] Módulo de técnicas (v2)
 - [ ] Exportação/impressão de fichas em PDF
 - [ ] Sincronização em nuvem
+
+## 🕵️ Dificuldades Encontradas
+
+Durante o desenvolvimento do projeto, algumas dificuldades foram enfrentadas, como:
+
+- **Complexidade do Balanceamento:** Traduzir todas as minúcias e interações de atributos, bônus e fórmulas matemáticas do RPG de mesa para validações reativas e automáticas no frontend.
+- **Gerenciamento de Estado:** Lidar com formulários muito complexos e encadeados no React mantendo a persistência confiável no `localStorage`.
+- **Eficácia dos Superprompts:** Refinar as restrições nos superprompts `.txt` para evitar que as IAs alucinassem números que quebrassem a economia do Sistema H.I.K. v2.0.
