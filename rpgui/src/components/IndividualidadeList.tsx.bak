@@ -1,0 +1,160 @@
+import { useState } from 'react'
+import { Trash2, Calculator } from 'lucide-react'
+import type { IndividualidadeAbility, IndividualidadeLevel } from '../types'    
+import { nanoid } from '../utils/nanoid'
+import TechniqueBuilderModal from './TechniqueBuilderModal'
+
+interface Props {
+  abilities: IndividualidadeAbility[]
+  onChange: (abilities: IndividualidadeAbility[]) => void
+}
+
+const LEVEL_COLORS = ['#4a8fd4', '#9b60d4', '#e8a000'] as const
+
+const emptyLevel = (): IndividualidadeLevel => ({ description: '', damage: '', phCost: '', dodgeDT: '' })
+
+const emptyAbility = (): IndividualidadeAbility => ({
+  id: nanoid(),
+  name: '',
+  gasCount: '',
+  techniqueCount: '',
+  statusEffect: '',
+  statusDT: '',
+  level1: emptyLevel(),
+  level2: emptyLevel(),
+  level3: emptyLevel(),
+})
+
+export default function IndividualidadeList({ abilities, onChange }: Props) {
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false)
+
+  const toggle = (id: string) => setExpanded(prev => {
+    const next = new Set(prev)
+    next.has(id) ? next.delete(id) : next.add(id)
+    return next
+  })
+
+  const add = () => {
+    const ab = emptyAbility()
+    onChange([...abilities, ab])
+    setExpanded(prev => new Set([...prev, ab.id]))
+  }
+
+  const remove = (id: string) => onChange(abilities.filter(a => a.id !== id))
+
+  const updateAbility = <K extends keyof IndividualidadeAbility>(id: string, field: K, val: IndividualidadeAbility[K]) =>
+    onChange(abilities.map(a => a.id === id ? { ...a, [field]: val } : a))
+
+  const updateLevel = (id: string, lKey: 'level1' | 'level2' | 'level3', field: keyof IndividualidadeLevel, val: string) =>
+    onChange(abilities.map(a => a.id === id ? { ...a, [lKey]: { ...a[lKey], [field]: val } } : a))
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-3">
+        <span className="font-impact text-[11px] tracking-[3px] uppercase" style={{ color: '#4a8fd4' }}>
+          {abilities.length} Habilidades
+        </span>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => setIsCalculatorOpen(true)}
+            className="flex items-center gap-1 font-impact text-[11px] tracking-[2px] uppercase px-3 py-1.5 transition-colors"
+            style={{ background: '#111', border: '2px solid #e8a000', color: '#e8a000' }}
+            onMouseEnter={e => { ;(e.currentTarget as HTMLElement).style.background = '#e8a000'; ;(e.currentTarget as HTMLElement).style.color = '#000' }}      
+            onMouseLeave={e => { ;(e.currentTarget as HTMLElement).style.background = '#111'; ;(e.currentTarget as HTMLElement).style.color = '#e8a000' }}>     
+            <Calculator size={13} /> Criar Técnica (P.I)
+          </button>
+        </div>
+      </div>
+
+      {isCalculatorOpen && <TechniqueBuilderModal 
+        onClose={() => setIsCalculatorOpen(false)} 
+        onSave={(data) => {
+          const ab = emptyAbility();
+          ab.name = data.name;
+          ab.notes = data.notes;
+          onChange([...abilities, ab]);
+          setExpanded(prev => new Set([...prev, ab.id]));
+          setIsCalculatorOpen(false);
+        }}
+      />}
+
+      <div className="space-y-2">
+        {abilities.map(ab => {
+          const isOpen = expanded.has(ab.id)
+          return (
+            <div key={ab.id} style={{ border: '1px solid #2a2a2a' }}>
+              {/* Header */}
+              <div className="flex items-center gap-2 px-3 py-2 cursor-pointer"
+                style={{ background: '#0d2a4a', borderBottom: isOpen ? '1px solid #2a2a2a' : 'none' }}
+                onClick={() => toggle(ab.id)}>
+                <span className="font-impact text-[11px]" style={{ color: '#4a8fd4' }}>{isOpen ? '▾' : '▸'}</span>
+                <input type="text" placeholder="Nome da habilidade" value={ab.name}
+                  onClick={e => e.stopPropagation()}
+                  onChange={e => updateAbility(ab.id, 'name', e.target.value)}
+                  className="flex-1 font-impact text-[14px] tracking-[1px] bg-transparent focus:outline-none"
+                  style={{ color: ab.name ? '#a8ccee' : '#555' }} />
+                <button type="button" onClick={e => { e.stopPropagation(); remove(ab.id) }}
+                  className="transition-colors" style={{ color: '#555' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#d44040')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#555')}>
+                  <Trash2 size={13} />
+                </button>
+              </div>
+
+              {isOpen && (
+                <div className="p-3 space-y-4" style={{ background: '#080810' }}>
+                  {/* Meta stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {[
+                      { label: 'Nº Gás / Usos', field: 'gasCount' as const, placeholder: '5 + modPOD + modINT' },
+                      { label: 'Técnicas', field: 'techniqueCount' as const, placeholder: '4 + modINT' },
+                      { label: 'Efeito de Status', field: 'statusEffect' as const, placeholder: 'Efeito Corrosivo' },
+                      { label: 'DT do Efeito', field: 'statusDT' as const, placeholder: '13 + modPOD' },
+                    ].map(({ label, field, placeholder }) => (
+                      <div key={field} style={{ background: '#111', border: '1px solid #2a2a2a', borderTop: '2px solid #1a3a5a', padding: '6px 8px' }}>
+                        <span className="block font-bold text-[9px] tracking-[2px] uppercase mb-1" style={{ color: '#4a8fd4' }}>{label}</span>
+                          <input type="text" placeholder={placeholder} value={ab[field] || ''}
+                            onChange={e => updateAbility(ab.id, field, e.target.value)}
+                            className="w-full text-[12px] font-mono bg-transparent focus:outline-none"
+                            style={{ color: '#d8d8d8' }} />
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ background: '#111', border: '1px solid #2a2a2a', borderTop: '2px solid #9b60d4', padding: '6px 8px' }}>
+                      <span className="block font-bold text-[9px] tracking-[2px] uppercase mb-1" style={{ color: '#9b60d4' }}>NOTAS SOBRE O FUNCIONAMENTO DA TÉCNICA</span>
+                      <textarea value={ab.notes || ''} onChange={e => updateAbility(ab.id, 'notes', e.target.value)}
+                        rows={2} placeholder="Descreva aqui o comportamento, as regras específicas de alcance, gatilho, ou passivas dessa individualidade..."
+                        className="w-full text-[12px] font-mono bg-transparent focus:outline-none resize-none"
+                        style={{ color: '#d8d8d8' }} />
+                            Nível {idx + 1}
+                          </div>
+                          <div className="p-2 space-y-2">
+                            {([
+                              { label: 'Habilidade', field: 'description' as const },
+                              { label: 'Dano', field: 'damage' as const },
+                              { label: 'Custo P.H.', field: 'phCost' as const },
+                              { label: 'DT Esquiva', field: 'dodgeDT' as const },
+                            ]).map(({ label, field }) => (
+                              <div key={field} style={{ background: '#111', border: '1px solid #2a2a2a', borderTop: `2px solid ${color}50`, padding: '5px 7px' }}>
+                                <span className="block font-bold text-[8px] tracking-[2px] uppercase mb-1" style={{ color }}>{label}</span>
+                                <textarea value={ab[lKey][field]} onChange={e => updateLevel(ab.id, lKey, field, e.target.value)}
+                                  rows={2} placeholder="—"
+                                  className="w-full text-[11px] bg-transparent focus:outline-none resize-none"
+                                  style={{ color: '#d8d8d8' }} />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

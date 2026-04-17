@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold:        #e8a000;
+  --color-gold-dim:    #b37a00;
+  --color-hik-blue:    #4a7ab8;
+  --color-hik-red:     #c05050;
+  --color-hik-bg:      #0d0d0d;
+  --color-hik-bg2:     #111111;
+  --color-hik-bg3:     #080808;
+  --color-hik-bg4:     #161616;
+  --color-hik-border:  #1a1a1a;
+  --color-hik-border2: #222222;
+  --color-hik-text:    #d8d8d8;
+  --color-hik-dim:     #888888;
+  --color-hik-muted:   #444444;
+  --font-impact: Impact, 'Arial Black', sans-serif;
+  --font-body: 'Segoe UI', system-ui, sans-serif;
+}
+
+@layer base {
+  html, body {
+    background: #0d0d0d;
+    color: #d8d8d8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #080808; }
+  ::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+  * { box-sizing: border-box; }
+}
+
+@layer utilities {
+  .halftone-page {
+    background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+  .halftone-header {
+    position: relative;
+    overflow: hidden;
+  }
+  .halftone-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #ffffff06 1px, transparent 1px);
+    background-size: 5px 5px;
+    pointer-events: none;
+  }
+  .font-impact {
+    font-family: Impact, 'Arial Black', sans-serif;
+  }
+}
