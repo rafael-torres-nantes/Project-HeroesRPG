@@ -2,10 +2,16 @@ import type { Character } from '../types'
 
 const now = new Date('2010-04-22T00:00:00.000Z').toISOString()
 
+const NEW_FIELD_DEFAULTS = {
+  appearance: '',
+  conceptArt: [] as string[],
+  personality: { traits: '', motivations: '', fears: '' },
+}
+
 // Fichas de NPCs do universo 101% — Sistema H.I.K. v2.0
 // Jogadores estão no nível 10. NPCs de elite: nível 12+. Cartas de Tarot: nível 18+.
 
-export const DEFAULT_CHARACTERS: Character[] = [
+const RAW_CHARACTERS: Omit<Character, 'appearance' | 'conceptArt' | 'personality'>[] = [
 
   // ── A LEGIÃO ─────────────────────────────────────────────────────────────
 
@@ -695,3 +701,5 @@ export const DEFAULT_CHARACTERS: Character[] = [
     updatedAt: now,
   },
 ]
+
+export const DEFAULT_CHARACTERS: Character[] = RAW_CHARACTERS.map(c => ({ ...NEW_FIELD_DEFAULTS, ...c }))

@@ -53,6 +53,12 @@ export interface IndividualidadeAbility {
   level3: IndividualidadeLevel
 }
 
+export interface CharacterPersonality {
+  traits: string
+  motivations: string
+  fears: string
+}
+
 export interface Character {
   id: string
   name: string
@@ -74,6 +80,9 @@ export interface Character {
   individualidadeName: string
   individualidadeAbilities: IndividualidadeAbility[]
   notes: string
+  appearance: string
+  conceptArt: string[]
+  personality: CharacterPersonality
   createdAt: string
   updatedAt: string
 }

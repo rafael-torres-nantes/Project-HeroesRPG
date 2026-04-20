@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Dice6 } from 'lucide-react'
 import Layout from '../components/Layout'
@@ -35,6 +35,9 @@ const defaultChar = (): Character => ({
   individualidadeName: '',
   individualidadeAbilities: [],
   notes: '',
+  appearance: '',
+  conceptArt: [],
+  personality: { traits: '', motivations: '', fears: '' },
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 })
@@ -81,6 +84,9 @@ function migrate(raw: any): Character {
     individualidadeName,
     individualidadeAbilities: raw.individualidadeAbilities ?? [],
     notes,
+    appearance: raw.appearance ?? '',
+    conceptArt: raw.conceptArt ?? [],
+    personality: raw.personality ?? { traits: '', motivations: '', fears: '' },
     createdAt: raw.createdAt ?? new Date().toISOString(),
     updatedAt: raw.updatedAt ?? new Date().toISOString(),
   }
@@ -88,51 +94,51 @@ function migrate(raw: any): Character {
 
 // UI helpers
 const SectionLabel = ({ children, color = '#333' }: { children: React.ReactNode; color?: string }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: 14 }}>
-    <span style={{ display: 'inline-block', width: 3, height: 12, borderRadius: 2, background: color, flexShrink: 0 }} />
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#aaa', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: 14, fontWeight: 600 }}>
+    <span style={{ display: 'inline-block', width: 3, height: 13, borderRadius: 2, background: color, flexShrink: 0 }} />
     {children}
   </div>
 )
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div>
-    <div style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 5 }}>{label}</div>
+    <div style={{ fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 6 }}>{label}</div>
     {children}
   </div>
 )
 
 
-function CollapsiblePanel({ icon, title, count, children, id }: {
-  icon: string; title: string; count?: string; children: React.ReactNode; id?: string
+function CollapsiblePanel({ icon, title, count, children, id, defaultOpen = false }: {
+  icon: string; title: string; count?: string; children: React.ReactNode; id?: string; defaultOpen?: boolean
 }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(defaultOpen)
   const panelId = id ?? `panel-${title.toLowerCase().replace(/\s+/g, '-')}`
   return (
-    <div style={{ borderBottom: '1px solid #1e1e1e' }}>
+    <div style={{ borderBottom: '1px solid #2a2a2a' }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
         aria-controls={panelId}
         className="w-full flex items-center gap-2 text-left"
-        style={{ padding: '16px 28px', background: 'transparent', border: 'none', cursor: 'pointer', transition: 'background 0.1s' }}
-        onMouseEnter={e => (e.currentTarget.style.background = '#0f0f0f')}
-        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-        onFocus={e => (e.currentTarget.style.background = '#0f0f0f')}
-        onBlur={e => (e.currentTarget.style.background = 'transparent')}
+        style={{ padding: '16px 28px', background: open ? '#141414' : '#111', border: 'none', cursor: 'pointer', transition: 'background 0.15s', borderLeft: open ? '3px solid #e8a000' : '3px solid transparent' }}
+        onMouseEnter={e => (e.currentTarget.style.background = '#161616')}
+        onMouseLeave={e => (e.currentTarget.style.background = open ? '#141414' : '#111')}
+        onFocus={e => (e.currentTarget.style.background = '#161616')}
+        onBlur={e => (e.currentTarget.style.background = open ? '#141414' : '#111')}
       >
-        <span style={{ fontSize: 11, color: '#555' }}>{icon}</span>
-        <span style={{ flex: 1, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: '2px' }}>{title}</span>
-        {count && !open && <span style={{ fontSize: 10, color: '#444' }}>{count}</span>}
+        <span style={{ fontSize: 13, color: open ? '#e8a000' : '#666' }}>{icon}</span>
+        <span style={{ flex: 1, fontSize: 12, color: open ? '#d8d8d8' : '#999', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: open ? 600 : 400 }}>{title}</span>
+        {count && !open && <span style={{ fontSize: 10, color: '#555', background: '#1a1a1a', padding: '2px 8px', borderRadius: 3, border: '1px solid #2a2a2a' }}>{count}</span>}
         <span style={{
-          fontSize: 10, color: '#444', marginLeft: 8,
+          fontSize: 11, color: open ? '#e8a000' : '#555', marginLeft: 8,
           display: 'inline-block',
           transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease',
         }}>▸</span>
       </button>
       {open && (
-        <div id={panelId} style={{ padding: '0 28px 20px' }}>
+        <div id={panelId} style={{ padding: '4px 28px 24px', background: '#0f0f0f', borderLeft: '3px solid #e8a000' }}>
           {children}
         </div>
       )}
@@ -149,6 +155,8 @@ export default function CharacterEditor() {
   const [phDelta, setPhDelta] = useState(0)
   const [penetratingDelta, setPenetratingDelta] = useState(0)
   const [roll, setRoll] = useState<DamageRollResult | null>(null)
+  const [activeTab, setActiveTab] = useState<'ficha' | 'aparencia' | 'personalidade'>('ficha')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleRollMelee = (damage: string) => {
     const res = executeRoll(damage)
@@ -215,6 +223,28 @@ export default function CharacterEditor() {
     setPhDelta(0)
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+    Array.from(files).forEach(file => {
+      const reader = new FileReader()
+      reader.onload = ev => {
+        const result = ev.target?.result as string
+        if (result) setChar(prev => ({ ...prev, conceptArt: [...prev.conceptArt, result] }))
+      }
+      reader.readAsDataURL(file)
+    })
+    e.target.value = ''
+  }
+
+  const removeImage = (idx: number) => {
+    setChar(prev => ({ ...prev, conceptArt: prev.conceptArt.filter((_, i) => i !== idx) }))
+  }
+
+  const updatePersonality = (field: keyof Character['personality'], val: string) => {
+    setChar(prev => ({ ...prev, personality: { ...prev.personality, [field]: val } }))
+  }
+
   const save = () => {
     storage.saveCharacter({ ...char, updatedAt: new Date().toISOString() })
     setSaved(true)
@@ -224,8 +254,8 @@ export default function CharacterEditor() {
 
   const fieldInputStyle: React.CSSProperties = {
     background: 'transparent', border: 'none', borderBottom: '1px solid #2a2a2a',
-    color: '#ccc', fontSize: 12, width: '100%', outline: 'none',
-    padding: '3px 0', transition: 'border-color 0.15s',
+    color: '#d8d8d8', fontSize: 13, width: '100%', outline: 'none',
+    padding: '4px 0', transition: 'border-color 0.15s',
   }
   const levelInputStyle: React.CSSProperties = {
     background: 'transparent', border: 'none', borderBottom: '1px solid #2a2a2a',
@@ -251,6 +281,28 @@ export default function CharacterEditor() {
           {/* COLUNA PRINCIPAL */}
           <div style={{ borderRight: '0px' }} className="xl:border-r-[3px] xl:border-r-gold">
 
+            {/* ABAS */}
+            <div style={{ display: 'flex', borderBottom: '1px solid #1e1e1e', background: '#0a0a0a' }}>
+              {(['ficha', 'aparencia', 'personalidade'] as const).map(tab => {
+                const labels = { ficha: 'Ficha', aparencia: 'Aparência', personalidade: 'Personalidade' }
+                const active = activeTab === tab
+                return (
+                  <button key={tab} type="button" onClick={() => setActiveTab(tab)}
+                    style={{
+                      padding: '12px 20px', background: 'transparent', border: 'none',
+                      borderBottom: active ? '2px solid #e8a000' : '2px solid transparent',
+                      color: active ? '#e8a000' : '#555', fontSize: 11, textTransform: 'uppercase',
+                      letterSpacing: '2px', cursor: 'pointer', transition: 'color 0.15s',
+                    }}
+                    onMouseEnter={e => { if (!active) e.currentTarget.style.color = '#888' }}
+                    onMouseLeave={e => { if (!active) e.currentTarget.style.color = '#555' }}>
+                    {labels[tab]}
+                  </button>
+                )
+              })}
+            </div>
+
+            {activeTab === 'ficha' && <>
             {/* IDENTIDADE */}
             <div style={{ padding: '24px 28px', borderBottom: '1px solid #1e1e1e' }}>
               <SectionLabel color="#e8a000">Identidade</SectionLabel>
@@ -279,7 +331,7 @@ export default function CharacterEditor() {
                     style={fieldInputStyle} />
                 </Field>
                 <div>
-                  <label htmlFor="field-archetype" style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 5, display: 'block' }}>Arquétipo</label>
+                  <label htmlFor="field-archetype" style={{ fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 6, display: 'block' }}>Arquétipo</label>
                   <select id="field-archetype" value={char.archetype} onChange={e => update('archetype', e.target.value as Archetype)}
                     {...focusGold}
                     style={{ ...fieldInputStyle, cursor: 'pointer' }}>
@@ -346,7 +398,7 @@ export default function CharacterEditor() {
               <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 20 }}>
                 {/* PV */}
                 <div style={{ background: '#111', padding: 18, borderRadius: 6, borderTop: '2px solid #c05050', overflow: 'hidden' }}>
-                  <div style={{ fontSize: 10, color: '#c05050', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 10, fontWeight: 600 }}>
+                  <div style={{ fontSize: 12, color: '#c05050', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 10, fontWeight: 700 }}>
                     Pontos de Vida
                   </div>
                   <div style={{ position: 'relative', background: '#1a1a1a', height: 6, borderRadius: 3, marginBottom: 14, overflow: 'hidden' }}>
@@ -364,23 +416,23 @@ export default function CharacterEditor() {
                       style={{ background: '#0d0d0d', border: '1px solid #2a2a2a', color: '#ccc', fontSize: 15, width: 54, textAlign: 'center', padding: '7px 4px', outline: 'none', borderRadius: 3 }} />
                     <button type="button"
                       onClick={() => applyDamage(pvDelta)}
-                      style={{ flex: 1, padding: '7px 0', background: '#200a0a', border: '1px solid #4a1010', color: '#d44040', fontSize: 11, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 600 }}>
+                      style={{ flex: 1, padding: '8px 0', background: '#200a0a', border: '1px solid #4a1010', color: '#d44040', fontSize: 12, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 700 }}>
                       − Dano
                     </button>
                     <button type="button"
                       onClick={() => applyHeal(pvDelta)}
-                      style={{ flex: 1, padding: '7px 0', background: '#0a1a0a', border: '1px solid #1a3a1a', color: '#3dc48e', fontSize: 11, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 600 }}>
+                      style={{ flex: 1, padding: '8px 0', background: '#0a1a0a', border: '1px solid #1a3a1a', color: '#3dc48e', fontSize: 12, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 700 }}>
                       + Cura
                     </button>
                   </div>
                 </div>
                   {/* ARMADURA */}
                   <div style={{ background: '#111', padding: 18, borderRadius: 6, borderTop: '2px solid #5a9e6a', overflow: 'hidden' }}>
-                    <div style={{ fontSize: 10, color: '#5a9e6a', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 12, fontWeight: 600 }}>
+                    <div style={{ fontSize: 12, color: '#5a9e6a', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 12, fontWeight: 700 }}>
                       Armadura
                     </div>
                     <div style={{ marginBottom: 12 }}>
-                      <label htmlFor="armor-type-select" style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: 5 }}>Tipo</label>
+                      <label htmlFor="armor-type-select" style={{ fontSize: 11, color: '#777', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: 6 }}>Tipo</label>
                       <select
                         id="armor-type-select"
                         value={armorType}
@@ -395,7 +447,7 @@ export default function CharacterEditor() {
                       </select>
                     </div>
                     <div style={{ marginBottom: 12 }}>
-                      <label htmlFor="armor-value-input" style={{ fontSize: 10, color: '#555', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: 5 }}>Redução de Dano</label>
+                      <label htmlFor="armor-value-input" style={{ fontSize: 11, color: '#777', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: 6 }}>Redução de Dano</label>
                       <input
                         id="armor-value-input"
                         type="number" min={0} value={currentArmor}
@@ -404,7 +456,7 @@ export default function CharacterEditor() {
                         onBlur={e => (e.currentTarget.style.borderBottomColor = '#2a3a2a')}
                         style={{ background: 'transparent', border: 'none', borderBottom: '1px solid #2a3a2a', color: '#5a9e6a', fontSize: 38, fontWeight: 700, lineHeight: 1, outline: 'none', width: '100%', marginBottom: 4, transition: 'border-color 0.15s' }}
                       />
-                      <div style={{ fontSize: 10, color: '#3a3a3a', letterSpacing: 1 }}>
+                      <div style={{ fontSize: 11, color: '#555', letterSpacing: 1 }}>
                         pts de redução por ataque (mín. 0)
                       </div>
                     </div>
@@ -420,7 +472,7 @@ export default function CharacterEditor() {
                         style={{ background: '#0d0d0d', border: '1px solid #2a2a2a', color: '#ccc', fontSize: 13, width: 54, textAlign: 'center', padding: '7px 4px', outline: 'none', borderRadius: 3 }} />
                       <button type="button"
                         onClick={() => { applyDamagePenetrating(penetratingDelta); setPenetratingDelta(0) }}
-                        style={{ flex: 1, padding: '7px 0', background: '#200a0a', border: '1px solid #4a1010', color: '#d44040', fontSize: 10, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 600 }}>
+                        style={{ flex: 1, padding: '8px 0', background: '#200a0a', border: '1px solid #4a1010', color: '#d44040', fontSize: 11, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 700 }}>
                         − Penetrante
                       </button>
                     </div>
@@ -428,7 +480,7 @@ export default function CharacterEditor() {
 
                 {/* PH */}
                 <div style={{ background: '#111', padding: 18, borderRadius: 6, borderTop: '2px solid #4a8fd4', overflow: 'hidden' }}>
-                  <div style={{ fontSize: 10, color: '#4a8fd4', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 10, fontWeight: 600 }}>
+                  <div style={{ fontSize: 12, color: '#4a8fd4', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 10, fontWeight: 700 }}>
                     Pontos Heróicos
                   </div>
                   <div style={{ position: 'relative', background: '#1a1a1a', height: 6, borderRadius: 3, marginBottom: 14, overflow: 'hidden' }}>
@@ -446,12 +498,12 @@ export default function CharacterEditor() {
                       style={{ background: '#0d0d0d', border: '1px solid #2a2a2a', color: '#ccc', fontSize: 15, width: 54, textAlign: 'center', padding: '7px 4px', outline: 'none', borderRadius: 3 }} />
                     <button type="button"
                       onClick={() => applyPHSpend(phDelta)}
-                      style={{ flex: 1, padding: '7px 0', background: '#080d1a', border: '1px solid #111f3a', color: '#4a8fd4', fontSize: 11, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 600 }}>
+                      style={{ flex: 1, padding: '8px 0', background: '#080d1a', border: '1px solid #111f3a', color: '#4a8fd4', fontSize: 12, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 700 }}>
                       − Gastar
                     </button>
                     <button type="button"
                       onClick={() => applyPHRecover(phDelta)}
-                      style={{ flex: 1, padding: '7px 0', background: '#0a1a0a', border: '1px solid #1a3a1a', color: '#3dc48e', fontSize: 11, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 600 }}>
+                      style={{ flex: 1, padding: '8px 0', background: '#0a1a0a', border: '1px solid #1a3a1a', color: '#3dc48e', fontSize: 12, letterSpacing: '1px', cursor: 'pointer', borderRadius: 3, textTransform: 'uppercase', fontWeight: 700 }}>
                       + Rec.
                     </button>
                   </div>
@@ -470,7 +522,7 @@ export default function CharacterEditor() {
                   <div className="absolute right-[-10px] bottom-[-10px] opacity-[0.03] group-hover:opacity-10 group-hover:scale-110 transition-all text-[#d44040]">
                     <Dice6 size={80} />
                   </div>
-                  <div style={{ fontSize: 10, color: '#d44040', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6, zIndex: 1 }}>
+                  <div style={{ fontSize: 11, color: '#d44040', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6, zIndex: 1, fontWeight: 600 }}>
                     <Dice6 size={14} /> Dano C.C.
                   </div>
                   <div style={{ fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1, zIndex: 1, fontFamily: 'Impact, Arial Black, sans-serif', letterSpacing: 1 }}>
@@ -480,7 +532,7 @@ export default function CharacterEditor() {
 
                 {/* Deslocamento */}
                 <div style={{ background: 'linear-gradient(135deg, #1f1c0a 0%, #111 100%)', border: '1px solid #3a3215', padding: '16px 20px', borderRadius: 4, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
-                  <div style={{ fontSize: 10, color: '#e8a000', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8, zIndex: 1 }}>
+                  <div style={{ fontSize: 11, color: '#e8a000', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8, zIndex: 1, fontWeight: 600 }}>
                     Deslocamento
                   </div>
                   <div style={{ fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1, zIndex: 1, fontFamily: 'Impact, Arial Black, sans-serif', letterSpacing: 1 }}>
@@ -490,7 +542,7 @@ export default function CharacterEditor() {
 
                 {/* Percepção Passiva */}
                 <div style={{ background: 'linear-gradient(135deg, #0a1f10 0%, #111 100%)', border: '1px solid #153a25', padding: '16px 20px', borderRadius: 4, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
-                  <div style={{ fontSize: 10, color: '#22c55e', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8, zIndex: 1 }}>
+                  <div style={{ fontSize: 11, color: '#22c55e', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8, zIndex: 1, fontWeight: 600 }}>
                     Percep. Passiva
                   </div>
                   <div style={{ fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1, zIndex: 1, fontFamily: 'Impact, Arial Black, sans-serif', letterSpacing: 1 }}>
@@ -503,7 +555,7 @@ export default function CharacterEditor() {
             </div>
 
             {/* PERÍCIAS */}
-            <CollapsiblePanel icon="◎" title="Perícias"
+            <CollapsiblePanel icon="◎" title="Perícias" defaultOpen
               count={`${Object.values(char.skills).filter(v => v > 0).length} treinadas`}>
               <SkillList skills={char.skills} attributes={char.attributes}
                 onChange={skills => update('skills', skills)} />
@@ -520,7 +572,7 @@ export default function CharacterEditor() {
             </CollapsiblePanel>
 
             {/* INDIVIDUALIDADES */}
-            <CollapsiblePanel icon="✦" title="Individualidades">
+            <CollapsiblePanel icon="✦" title="Individualidades" defaultOpen>
               <IndividualidadeList
                 abilities={char.individualidadeAbilities}
                 onChange={abs => update('individualidadeAbilities', abs)}
@@ -537,6 +589,111 @@ export default function CharacterEditor() {
                 className="w-full text-[13px] focus:outline-none resize-none"
                 style={{ background: 'transparent', border: 'none', borderBottom: '1px solid #1e1e1e', padding: '8px 0', color: '#d8d8d8', width: '100%' }} />
             </CollapsiblePanel>
+            </>}
+
+            {/* ABA APARÊNCIA */}
+            {activeTab === 'aparencia' && (
+              <div>
+                {/* Descrição Física */}
+                <div style={{ borderBottom: '1px solid #2a2a2a' }}>
+                  <div style={{ padding: '16px 28px', background: '#141414', borderLeft: '3px solid #e8a000', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: 13, color: '#e8a000' }}>◉</span>
+                    <span style={{ fontSize: 12, color: '#d8d8d8', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 600 }}>Descrição Física</span>
+                  </div>
+                  <div style={{ padding: '16px 28px 24px', background: '#0f0f0f', borderLeft: '3px solid #e8a000' }}>
+                    <textarea
+                      value={char.appearance}
+                      onChange={e => update('appearance', e.target.value)}
+                      rows={5}
+                      placeholder="Descreva a aparência do personagem: altura, compleição, traços marcantes, estilo de roupa..."
+                      className="w-full focus:outline-none resize-none"
+                      style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: 4, color: '#d8d8d8', fontSize: 13, padding: '12px 14px', width: '100%', lineHeight: 1.6 }}
+                      onFocus={e => (e.currentTarget.style.borderColor = '#e8a000')}
+                      onBlur={e => (e.currentTarget.style.borderColor = '#2a2a2a')}
+                    />
+                  </div>
+                </div>
+
+                {/* Concept Art */}
+                <div style={{ borderBottom: '1px solid #2a2a2a' }}>
+                  <div style={{ padding: '16px 28px', background: '#141414', borderLeft: '3px solid #e8a000', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 13, color: '#e8a000' }}>◈</span>
+                      <span style={{ fontSize: 12, color: '#d8d8d8', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 600 }}>Concept Art</span>
+                      {char.conceptArt.length > 0 && (
+                        <span style={{ fontSize: 10, color: '#555', background: '#1a1a1a', padding: '2px 8px', borderRadius: 3, border: '1px solid #2a2a2a' }}>{char.conceptArt.length} imagem{char.conceptArt.length !== 1 ? 'ns' : ''}</span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      style={{ background: 'transparent', border: '1px solid #2a2a2a', color: '#888', fontSize: 10, textTransform: 'uppercase', letterSpacing: '2px', padding: '5px 12px', cursor: 'pointer', borderRadius: 3 }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = '#e8a000'; e.currentTarget.style.color = '#e8a000' }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = '#2a2a2a'; e.currentTarget.style.color = '#888' }}>
+                      + Adicionar
+                    </button>
+                  </div>
+                  <div style={{ padding: '16px 28px 24px', background: '#0f0f0f', borderLeft: '3px solid #e8a000' }}>
+                    <input ref={fileInputRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleImageUpload} />
+                    {char.conceptArt.length === 0 ? (
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{ border: '1px dashed #2a2a2a', borderRadius: 4, padding: '32px 20px', textAlign: 'center', color: '#444', fontSize: 12, cursor: 'pointer', letterSpacing: '1px' }}
+                        onMouseEnter={e => (e.currentTarget.style.borderColor = '#555')}
+                        onMouseLeave={e => (e.currentTarget.style.borderColor = '#2a2a2a')}>
+                        Clique para adicionar imagens de concept art
+                      </div>
+                    ) : (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+                        {char.conceptArt.map((src, idx) => (
+                          <div key={idx} style={{ position: 'relative', background: '#111', borderRadius: 4, overflow: 'hidden', border: '1px solid #2a2a2a', aspectRatio: '3/4' }}>
+                            <img src={src} alt={`Concept art ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(idx)}
+                              style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.75)', border: '1px solid #3a1515', color: '#d44040', width: 24, height: 24, borderRadius: 3, cursor: 'pointer', fontSize: 12, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              onMouseEnter={e => (e.currentTarget.style.background = '#200a0a')}
+                              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0,0,0,0.75)')}>
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ABA PERSONALIDADE */}
+            {activeTab === 'personalidade' && (
+              <div>
+                {([
+                  { field: 'traits' as const, icon: '◆', label: 'Traços de Personalidade', placeholder: 'Como o personagem age, se comporta, suas manias e hábitos...' },
+                  { field: 'motivations' as const, icon: '◇', label: 'Motivações', placeholder: 'O que move o personagem, seus objetivos e ambições...' },
+                  { field: 'fears' as const, icon: '◈', label: 'Medos / Fraquezas', placeholder: 'O que o personagem teme, seus pontos cegos e vulnerabilidades...' },
+                ]).map(({ field, icon, label, placeholder }) => (
+                  <div key={field} style={{ borderBottom: '1px solid #2a2a2a' }}>
+                    <div style={{ padding: '16px 28px', background: '#141414', borderLeft: '3px solid #e8a000', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 13, color: '#e8a000' }}>{icon}</span>
+                      <span style={{ fontSize: 12, color: '#d8d8d8', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 600 }}>{label}</span>
+                    </div>
+                    <div style={{ padding: '16px 28px 24px', background: '#0f0f0f', borderLeft: '3px solid #e8a000' }}>
+                      <textarea
+                        value={char.personality[field]}
+                        onChange={e => updatePersonality(field, e.target.value)}
+                        rows={4}
+                        placeholder={placeholder}
+                        className="w-full focus:outline-none resize-none"
+                        style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: 4, color: '#d8d8d8', fontSize: 13, padding: '12px 14px', width: '100%', lineHeight: 1.6 }}
+                        onFocus={e => (e.currentTarget.style.borderColor = '#e8a000')}
+                        onBlur={e => (e.currentTarget.style.borderColor = '#2a2a2a')}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* SIDEBAR */}
